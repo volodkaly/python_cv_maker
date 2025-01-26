@@ -3,6 +3,7 @@ from tkinter import ttk, filedialog, messagebox
 from docx import Document
 from docx.enum.text import WD_PARAGRAPH_ALIGNMENT
 from docx.shared import Mm
+from PIL import Image
 
 class CVMakerApp:
     def __init__(self, root):
@@ -79,8 +80,17 @@ class CVMakerApp:
             title="Select Profile Picture"
         )
         if file_path:
-            self.profile_pic_path = file_path
-            self.profile_pic_label.config(text=f"Selected: {file_path.split('/')[-1]}")
+            try:
+                # Resize the image to a maximum size of 150x150 pixels
+                with Image.open(file_path) as img:
+                    max_size = (10000, 10000)
+                    img.thumbnail(max_size)  # Resize image
+                    resized_path = "resized_profile_pic.png"
+                    img.save(resized_path)  # Save resized image to a temporary file
+                    self.profile_pic_path = resized_path
+                    self.profile_pic_label.config(text=f"Selected: {file_path.split('/')[-1]}")
+            except Exception as e:
+                messagebox.showerror("Error", f"Failed to process the image: {e}")
 
     def generate_cv(self):
         # Collect user data
@@ -113,7 +123,11 @@ class CVMakerApp:
         title = doc.add_heading("Curriculum Vitae", 0)
         title.alignment = WD_PARAGRAPH_ALIGNMENT.CENTER
 
-        doc.add_picture(self.profile_pic_path, width=Mm(35), height=Mm(45))
+        if self.profile_pic_path:
+            try:
+                doc.add_picture(self.profile_pic_path, width=Mm(35))
+            except Exception as e:
+                messagebox.showwarning("Warning", f"Failed to add profile picture: {e}")
 
         doc.add_paragraph(f"Name: ", style="Heading 1")
 
@@ -143,7 +157,7 @@ class CVMakerApp:
         if any(skill.strip() for skill in skills):
             doc.add_paragraph("Skills:", style="Heading 2")
             for skill in skills:
-                doc.add_paragraph(f"- {skill.strip().title()}", style="Normal")
+                doc.add_paragraph(f"- {skill.strip()}", style="Normal")
 
         # Save the DOCX
         doc.save(file_path)
