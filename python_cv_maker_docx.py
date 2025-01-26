@@ -90,10 +90,6 @@ class CVMakerApp:
         experience = self.user_data["experience"].get().split(",")
         skills = self.user_data["skills"].get().split(",")
 
-        # Debugging Output
-        print(f"Name: {name}, Email: {email}, Phone: {phone}")
-        print(f"Education: {education}, Experience: {experience}, Skills: {skills}")
-
         if not name or not email or not phone:
             messagebox.showerror("Error", "Name, Email, and Phone are required!")
             return
@@ -113,18 +109,20 @@ class CVMakerApp:
     def create_docx(self, file_path, name, email, phone, education, experience, skills):
         doc = Document()
 
-        # Add Title
         title = doc.add_heading("Curriculum Vitae", 0)
         title.alignment = WD_PARAGRAPH_ALIGNMENT.CENTER
 
-        # Add Name
-        doc.add_paragraph(f"Name: {name.title()}", style="Heading 1")
+        doc.add_paragraph(f"Name: ", style="Heading 1")
 
-        # Add Email
-        doc.add_paragraph(f"Email: {email}", style="Normal")
+        doc.add_paragraph(f"{name.title()}", style="Normal")
 
-        # Add Phone
-        doc.add_paragraph(f"Phone: {phone}", style="Normal")
+        doc.add_paragraph(f"Email: ", style="Heading 1")
+
+        doc.add_paragraph(f"{email}", style="Normal")
+
+        doc.add_paragraph(f"Phone: ", style="Heading 1")
+
+        doc.add_paragraph(f"{phone}", style="Normal")
 
         # Add Education
         if education:
