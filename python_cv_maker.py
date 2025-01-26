@@ -123,7 +123,7 @@ class CVMakerApp:
                 messagebox.showerror("Error", f"Failed to add profile picture: {e}")
 
         # Header
-        pdf.drawString(50, y, f"Name: {name}")
+        pdf.drawString(50, y, f"Name: {name.title()}")
         pdf.drawString(50, y - 20, f"Email: {email}")
         pdf.drawString(50, y - 40, f"Phone: {phone}")
         y -= 60
@@ -132,21 +132,21 @@ class CVMakerApp:
         pdf.drawString(50, y, "Education:")
         y -= 20
         for edu in education:
-            pdf.drawString(70, y, f"- {edu.strip()}")
+            pdf.drawString(70, y, f"- {edu.strip().title()}")
             y -= 20
 
         # Experience
         pdf.drawString(50, y, "Work Experience:")
         y -= 20
         for exp in experience:
-            pdf.drawString(70, y, f"- {exp.strip()}")
+            pdf.drawString(70, y, f"- {exp.strip().title()}")
             y -= 20
 
         # Skills
         pdf.drawString(50, y, "Skills:")
         y -= 20
         for skill in skills:
-            pdf.drawString(70, y, f"- {skill.strip()}")
+            pdf.drawString(70, y, f"- {skill.strip().title()}")
             y -= 20
 
         # Save the PDF
