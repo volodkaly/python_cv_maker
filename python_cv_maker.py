@@ -9,8 +9,12 @@ from PIL import Image
 class CVMakerApp:
     def __init__(self, root):
         self.root = root
+        screen_width = self.root.winfo_screenwidth()
+        screen_height = self.root.winfo_screenheight()
         self.root.title("Customizable CV Maker")
-        self.root.geometry("600x700")
+        self.root.geometry(f"{int(0.5*screen_width)}x{int(0.5*screen_height)}+{int(0.25*screen_width)}+{int(0.25*screen_height)}")
+
+
 
         # User data dictionary with max lengths
         self.user_data = {
