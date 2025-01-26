@@ -143,11 +143,12 @@ class CVMakerApp:
             y -= 20
 
         # Skills
-        pdf.drawString(50, y, "Skills:")
-        y -= 20
-        for skill in skills:
-            pdf.drawString(70, y, f"- {skill.strip().title()}")
+        if any(skill.strip() for skill in skills):
+            pdf.drawString(50, y, "Skills:")
             y -= 20
+            for skill in skills:
+                pdf.drawString(70, y, f"- {skill.strip().title()}")
+                y -= 20
 
         # Save the PDF
         pdf.save()
