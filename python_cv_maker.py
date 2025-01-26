@@ -111,45 +111,81 @@ class CVMakerApp:
 
     def create_pdf(self, file_path, name, email, phone, education, experience, skills):
         pdf = canvas.Canvas(file_path, pagesize=letter)
-        pdf.setFont("Helvetica", 12)
-
-        y = 750
+        y = 750  # Starting y-coordinate for the content
 
         # Add profile picture if available
         if self.profile_pic_path:
             try:
                 img = Image.open(self.profile_pic_path)
-                img.thumbnail((100, 100))  # Resize image to fit in the PDF
+
+                # Crop the image to a square (centered crop)
+                width, height = img.size
+                min_dim = min(width, height)  # Use the smaller dimension
+                left = (width - min_dim) / 2
+                top = (height - min_dim) / 2
+                right = (width + min_dim) / 2
+                bottom = (height + min_dim) / 2
+                img = img.crop((left, top, right, bottom))
+
+                # Resize the cropped image to fit in the PDF
+                img.thumbnail((150, 150))
                 img_reader = ImageReader(img)
-                pdf.drawImage(img_reader, 50, y - 100, width=100, height=100)
+
+                # Draw the image on the PDF
+                pdf.drawImage(img_reader, 400, y - 150, width=150, height=150)
                 y -= 120  # Adjust y-coordinate for text
             except Exception as e:
                 messagebox.showerror("Error", f"Failed to add profile picture: {e}")
+        # Add user information with proper styling and spacing
+        line_spacing = 30  # Space between lines
 
-        # Header
-        pdf.drawString(50, y, f"Name: {name.title()}")
-        pdf.drawString(50, y - 20, f"Email: {email}")
-        pdf.drawString(50, y - 40, f"Phone: {phone}")
-        y -= 60
+        # Name
+        pdf.setFont("Helvetica-Bold", 16)
+        pdf.drawString(50, y, "Name:")
+        pdf.setFont("Helvetica", 14)
+        pdf.drawString(150, y, name.title())  # Indent value to align with title
+        y -= line_spacing
+
+        # Email
+        pdf.setFont("Helvetica-Bold", 16)
+        pdf.drawString(50, y, "Email:")
+        pdf.setFont("Helvetica", 14)
+        pdf.drawString(150, y, email)
+        y -= line_spacing
+
+        # Phone
+        pdf.setFont("Helvetica-Bold", 16)
+        pdf.drawString(50, y, "Phone:")
+        pdf.setFont("Helvetica", 14)
+        pdf.drawString(150, y, phone)
+        y -= line_spacing
 
         # Education
+        pdf.setFont("Helvetica-Bold", 16)
         pdf.drawString(50, y, "Education:")
-        y -= 20
+        y -= line_spacing
+        pdf.setFont("Helvetica", 14)
         for edu in education:
             pdf.drawString(70, y, f"- {edu.strip().title()}")
-            y -= 20
+            y -= 20  # Smaller spacing for list items
 
         # Experience
+        y -= 10  # Add some extra spacing before the next section
+        pdf.setFont("Helvetica-Bold", 16)
         pdf.drawString(50, y, "Work Experience:")
-        y -= 20
+        y -= line_spacing
+        pdf.setFont("Helvetica", 14)
         for exp in experience:
             pdf.drawString(70, y, f"- {exp.strip().title()}")
             y -= 20
 
         # Skills
+        y -= 10  # Add some extra spacing before the next section
         if any(skill.strip() for skill in skills):
+            pdf.setFont("Helvetica-Bold", 16)
             pdf.drawString(50, y, "Skills:")
-            y -= 20
+            y -= line_spacing
+            pdf.setFont("Helvetica", 14)
             for skill in skills:
                 pdf.drawString(70, y, f"- {skill.strip().title()}")
                 y -= 20
