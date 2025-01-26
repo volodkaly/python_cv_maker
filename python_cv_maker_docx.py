@@ -2,6 +2,7 @@ import tkinter as tk
 from tkinter import ttk, filedialog, messagebox
 from docx import Document
 from docx.enum.text import WD_PARAGRAPH_ALIGNMENT
+from docx.shared import Mm
 
 class CVMakerApp:
     def __init__(self, root):
@@ -111,6 +112,8 @@ class CVMakerApp:
 
         title = doc.add_heading("Curriculum Vitae", 0)
         title.alignment = WD_PARAGRAPH_ALIGNMENT.CENTER
+
+        doc.add_picture(self.profile_pic_path, width=Mm(35), height=Mm(45))
 
         doc.add_paragraph(f"Name: ", style="Heading 1")
 
